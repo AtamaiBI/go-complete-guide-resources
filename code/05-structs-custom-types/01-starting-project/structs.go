@@ -2,67 +2,83 @@ package main
 
 import (
 	"fmt"
-	"time"
+	// To imort a custom package use the import path which is the relative path from the go.mod file to the package folder. In this case, the package is located in the user folder, which is a subfolder of the current folder. The import path is therefore
+	"01-starting-project/user"
 )
 
-// create a struct type called user that has three fields: firstName, lastName, and birthdate. All of these fields should be of type string. A struct can be created either outside of a function or inside of a function. In this case, we will create the struct type outside of the main function. This is standard practice in Go, as it allows the struct type to be used throughout the entire package. The struct type is defined using the type keyword, followed by the name of the struct (user), and then the struct fields are defined within curly braces. Each field has a name and a type, separated by a space. In this case, all three fields are of type string.
-type user struct {
+/* The original struct definition was moved to the user.go file and is now being imported into this file. The struct definition is commented out here to avoid a redeclaration error. The struct definition is as follows:
+type User struct {
 	firstName string
 	lastName  string
 	birthdate string
-	createdAt time.Time // Time is also a struct type, and it is part of the time package. The time package is part of the Go standard library, and it provides functionality for working with dates and times. The createdAt field will be used to store the date and time when the user was created. This field is of type time.Time, which is a struct type that represents a specific point in time. The time.Time struct has many methods that can be used to manipulate and format dates and times.
-}
-
-// This function becomes a struct method by placing the struct name in parenthesise (user) after the func keyword and before the function name. You can also add a parameter, in this case u. The function then becomes a method belonging to the struct and can be called in an instance such as appUser.outputUserDetails().
-// the extra peice of code (u user) is called a Receiver argument and acts like a this or self keyword in C# or python
-func (u user) outputUserDetails() {
-	fmt.Println("struct method")
-	fmt.Println(u.firstName, u.lastName, u.createdAt)
-}
+	createdAt time.Time
+} */
 
 func main() {
+
 	firstName := getUserData("Please enter your first name: ")
 	lastName := getUserData("Please enter your last name: ")
 	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
 
-	var appUser user // create a variable of type user, which is a struct type. The variable is named appUser, and it will be used to store the data that we gather from the user. The variable is created using the var keyword, followed by the name of the variable (appUser), and then the type of the variable (user). The variable is initialized with the zero value for the user struct type, which means that all of its fields will be set to their zero values. In this case, all of the fields will be set to empty strings, except for the createdAt field, which will be set to the zero value for time.Time, which is January 1, year 1, 00:00:00 UTC.
+	// declare appUser as a pointer to a user struct. The *user.User type indicates that the variable is a pointer to a User struct. The variable is declared but not initialized, so it has a nil value. The variable can be initialized using the NewUser constructor function, which returns a pointer to a new User struct.
+	var appUser *user.User
 
-	appUser = user{
-		firstName: firstName,
-		lastName:  lastName,
-		birthdate: birthdate,
-		createdAt: time.Now(),
-	}
+	/*
+		appUser = User{
+			firstName: firstName,
+			lastName:  lastName,
+			birthdate: birthdate,
+			createdAt: time.Now(),
+		}*/
 
-appUser.outputUserDetails()
+		appUser, _ = user.NewUser(firstName,lastName,birthdate)
 
-	var appUser1 user = user{} // Declare and Initialize the struct
+		appUser.OutputUserDetails() // Call the struct method OutputUserDetails on the appUser variable. The method is called using the dot notation, which is used to access the fields and methods of a struct type. The method takes a parameter of type User, which is passed as an argument to the method. The method prints the details of the user to the console. The method expects a pointer to a User struct, so we pass the address of the appUser variable using the & operator. The method is called on the appUser variable, which is of type User, and the method has a receiver of type *User, which means it can be called on a pointer to a User struct. The method can access the fields of the struct using the receiver argument, which is a pointer to the struct.
 
-	appUser1.firstName = firstName
-	appUser1.lastName = lastName
+		appUser.WasTheFirtsNameChanged()
 
-	outputUserDetailsPointer(&appUser1)
+		anotherUser, _ := user.NewUser("John", "Doe", "01/01/2000")
+
+		anotherUser.OutputUserDetails()
+
+
+
+
+	var appUser1 user.User = user.User{} // Declare and Initialize the struct
+
+	appUser1.FirstName = firstName // The variable first name has not changed, rather the pointer method changed the field value. Hence this will print the original entry rather than the updated field value 'bobby'
+	appUser1.LastName = lastName
+
+	user.OutputUserDetailsPointer(&appUser1)
 
 	// ... do something awesome with that gathered data!
 
-	outputUserDetails(appUser)
+	// Short-variable declaration with struct literal or var user_ user.User
+	user_ := user.User{}
 
+	user_.OutputUserDetails() //
+
+	appUser.OutputUserDetails()
+
+	user.OutputUserDetails_changeLastName(*appUser) // Call the struct method OutputUserDetails on the appUser variable. The method is called using the dot notation, which is used to access the fields and methods of a struct type. The method takes a parameter of type User, which is passed as an argument to the method. The method prints the details of the user to the console. The method expects a value of type User, so we pass the value of the appUser variable using the * operator to dereference the pointer. The method is called on the appUser variable, which is of type User, and the method has a receiver of type User, which means it can be called on a value of type User. The method can access the fields of the struct using the receiver argument, which is a value of the struct.
+
+	fmt.Println("Print the original variable values")
 	fmt.Println(firstName, lastName, birthdate)
-}
 
+	//var user3, err = user_.NewUser(firstName, lastName, birthdate) //Use the constructor function. It returns a user Pointer
+	user3, err := user.NewUser(firstName,lastName,birthdate) // NewUser returns a memory pointer.
 
-func outputUserDetailsPointer(u *user) {
-	fmt.Println("Pointer Details: ", u.firstName, (*u).lastName) // Remember with pointers you must dereference them to access their values but Go allows you to use a shortcut method to access the underlying field without explicitly dereferencing the pointer by u.firstName
-}
+	if err != nil {
+		fmt.Println("Error creating user: ", err)
+		return
+	}
 
-// This function prints the fields within the struct user. Fields are different from properties which use Getters and Setters to access the underlying values.
-func outputUserDetails(u user) {
-	fmt.Println(u.firstName, u.lastName, u.createdAt)
-}
+	user3.OutputUserDetails() //OutputUserDetails is an instance method with a pointer parameter.
+} // end main
 
 func getUserData(promptText string) string {
 	fmt.Print(promptText)
 	var value string
-	fmt.Scan(&value)
+	fmt.Scanln(&value)
 	return value
 }
