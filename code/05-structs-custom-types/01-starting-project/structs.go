@@ -16,6 +16,8 @@ type User struct {
 
 func main() {
 
+	// prompts to get the user data. This should be done via a webpage
+
 	firstName := getUserData("Please enter your first name: ")
 	lastName := getUserData("Please enter your last name: ")
 	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
@@ -66,6 +68,7 @@ func main() {
 	fmt.Println(firstName, lastName, birthdate)
 
 	//var user3, err = user_.NewUser(firstName, lastName, birthdate) //Use the constructor function. It returns a user Pointer
+	// Need this := assignment operator
 	user3, err := user.NewUser(firstName,lastName,birthdate) // NewUser returns a memory pointer.
 
 	if err != nil {
