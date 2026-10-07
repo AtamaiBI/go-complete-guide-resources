@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
 )
 
 // create a struct type called User that has three fields: firstName, lastName, and birthdate. All of these fields should be of type string. A struct can be created either outside of a function or inside of a function. In this case, we will create the struct type outside of the main function. This is standard practice in Go, as it allows the struct type to be used throughout the entire package. The struct type is defined using the type keyword, followed by the name of the struct (User), and then the struct fields are defined within curly braces. Each field has a name and a type, separated by a space. In this case, all three fields are of type string.
@@ -16,7 +17,8 @@ type User struct {
 
 // Create a constructor function for the user struct. This returns a pointer to the new struct
 // Add validation to the constructor
-func NewUser(firstname, lastname, birthday string) (*User, error) {
+// changed func name from NewUser to New because when creating a new user New is sufficient to describe the purpose.
+func New(firstname, lastname, birthday string) (*User, error) {
 
 	if firstname == "" || lastname == "" || birthday == "" {
 		return nil, errors.New("first, last and birthday are required")
@@ -66,3 +68,28 @@ func CheckOutputUserDetails(u User) {
 	fmt.Println(u.FirstName, u.LastName)
 
 }
+
+// Admin starts with a capital to make this available across packages
+type Admin struct {
+	User User /* This embeds the User struct into the admin struct, which s similar to inheritance. User is the name
+	and User the type. User User */
+	role string
+	password string
+}
+
+// create a contructor for the admin struct
+func NewAdmin(firstname, lastname, role, password string) Admin {
+	return Admin{
+		role: role,
+		password: password,
+		User: User{
+			FirstName: firstname,
+			LastName: lastname,
+			birthdate: time.Now().Format("01/02/2006"),
+			CreatedAt: time.Now(),
+		},
+	}
+
+}
+
+

@@ -33,13 +33,14 @@ func main() {
 			createdAt: time.Now(),
 		}*/
 
-		appUser, _ = user.NewUser(firstName,lastName,birthdate)
+
+		appUser, _ = user.New(firstName,lastName,birthdate)
 
 		appUser.OutputUserDetails() // Call the struct method OutputUserDetails on the appUser variable. The method is called using the dot notation, which is used to access the fields and methods of a struct type. The method takes a parameter of type User, which is passed as an argument to the method. The method prints the details of the user to the console. The method expects a pointer to a User struct, so we pass the address of the appUser variable using the & operator. The method is called on the appUser variable, which is of type User, and the method has a receiver of type *User, which means it can be called on a pointer to a User struct. The method can access the fields of the struct using the receiver argument, which is a pointer to the struct.
 
 		appUser.WasTheFirtsNameChanged()
 
-		anotherUser, _ := user.NewUser("John", "Doe", "01/01/2000")
+		anotherUser, _ := user.New("John", "Doe", "01/01/2000")
 
 		anotherUser.OutputUserDetails()
 
@@ -69,7 +70,7 @@ func main() {
 
 	//var user3, err = user_.NewUser(firstName, lastName, birthdate) //Use the constructor function. It returns a user Pointer
 	// Need this := assignment operator
-	user3, err := user.NewUser(firstName,lastName,birthdate) // NewUser returns a memory pointer.
+	user3, err := user.New(firstName,lastName,birthdate) // NewUser returns a memory pointer.
 
 	if err != nil {
 		fmt.Println("Error creating user: ", err)
@@ -77,6 +78,12 @@ func main() {
 	}
 
 	user3.OutputUserDetails() //OutputUserDetails is an instance method with a pointer parameter.
+
+admin := user.NewAdmin(firstName,lastName, "Administrator", "test1234")
+
+admin.User.OutputUserDetails()
+
+
 } // end main
 
 func getUserData(promptText string) string {
