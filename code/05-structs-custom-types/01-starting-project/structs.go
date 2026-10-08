@@ -81,11 +81,14 @@ func main() {
 
 admin := user.NewAdmin(firstName,lastName, "Administrator", "test1234")
 
-admin.User.OutputUserDetails()
+admin.User.OutputUserDetails() // access the method in the embedded struct
+
+
 
 
 } // end main
 
+// Function to get user data. This would normally be a webform.
 func getUserData(promptText string) string {
 	fmt.Print(promptText)
 	var value string

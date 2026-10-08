@@ -72,7 +72,7 @@ func CheckOutputUserDetails(u User) {
 // Admin starts with a capital to make this available across packages
 type Admin struct {
 	User User /* This embeds the User struct into the admin struct, which s similar to inheritance. User is the name
-	and User the type. User User */
+	and User the type. User User. You can remove the name to make it an anonymous  */
 	role string
 	password string
 }
